@@ -6,14 +6,14 @@ if(encryption
 _on)
 begin 
 dataa = data_in - 3;
-dataa = dataa / 2;
+dataa = dataa ^ 2;
 dataa = dataa +9;
 dataa = dataa *3;
 end
 else
 dataa= data_in /3;
 dataa= dataa-9;
-dataa = dataa * 2;
+dataa = ~(dataa ^ 2);
 dataa = dataa +3;
 end
 end
