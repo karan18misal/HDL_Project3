@@ -1,60 +1,50 @@
 module secure_system (
     input clk,
-    input read_enable,
     input mem_write,
     input encryption_on,
-    input [9:0] reg1,
-    input [9:0] reg2,
-    input [9:0] address,
-    input [31:0] write_data,
-    output [31:0] secure_data_out
+    input [9:0] reg_address,
+    input [9:0] mem_address,
+    input [31:0] mem_write_data,
+    output [31:0] reg_data_out
 );
 
     // Internal wires
-    wire [31:0] read_reg1;
-    wire [31:0] read_reg2;
-    wire [31:0] memory_out;
-    wire [15:0] key_access_reg;
+    wire [31:0] memory_data_out;
+    wire [31:0] secured_data;
     wire [15:0] key_access_mem;
-    wire [31:0] read_data;
+    wire [15:0] key_access_reg;
 
-    // Output from security module
-    wire [31:0] data_to_output;
-
-    // Instantiate registers module
-    registers u_registers (
-        .clk(clk),
-        .reg1(reg1),
-        .reg2(reg2),
-        .read_enable(read_enable),
-        .address(address),
-        .write_data(write_data),
-        .read_reg1(read_reg1),
-        .read_reg2(read_reg2),
-        .memory_out(memory_out),
-        .key_access(key_access_reg)
-    );
-
-    // Instantiate memory module
+    // Step 1: Memory access
     memory u_memory (
         .clk(clk),
-        .address(address),
-        .write_data(write_data),
+        .address(mem_address),
+        .write_data(mem_write_data),
         .mem_write(mem_write),
-        .read_data(read_data),
+        .read_data(memory_data_out),
         .key_access(key_access_mem)
     );
 
-    // Instantiate security module
+    // Step 2: Security processing
     security u_security (
-        .data_in(read_data),
+        .data_in(memory_data_out),
         .encryption_on(encryption_on),
         .key_access_mem(key_access_mem),
         .key_access_reg(key_access_reg),
-        .data_out(data_to_output)
+        .data_out(secured_data)
     );
 
-    // Final output
-    assign secure_data_out = data_to_output;
+    // Step 3: Write secured data to registers
+    registers u_registers (
+        .clk(clk),
+        .reg1(reg_address),
+        .reg2(10'd0),  // unused
+        .read_enable(1'b0), // not reading
+        .address(reg_address),
+        .write_data(secured_data),
+        .read_reg1(reg_data_out),
+        .read_reg2(), // unused
+        .memory_out(), // unused
+        .key_access(key_access_reg)
+    );
 
 endmodule
