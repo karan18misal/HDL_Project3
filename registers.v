@@ -1,20 +1,28 @@
-module registers(input [9:0]reg1, input {9:0]reg2, input read_enable, input [9:0] address, output read_reg1, output read_reg2, output memory_out, output key_access)
-    wire [31:0]data_memory1;
-    wire [31:0]data_memory2;
-    wire [31:0]data_memory3;
+module registers(
+    input clk,
+    input [9:0] reg1,
+    input [9:0] reg2,
+    input read_enable,
+    input [9:0] address,
+    input [31:0] write_data,
+    output reg [31:0] read_reg1,
+    output reg [31:0] read_reg2,
+    output reg [31:0] memory_out,
+    output [15:0] key_access
+);
+
     reg [31:0] memory [0:1023];
+
     always @(posedge clk) begin
         if (!read_enable) begin
-            memory[address]<= write_data;
+            memory[address] <= write_data;
+        end else begin
+            read_reg1 <= memory[reg1];
+            read_reg2 <= memory[reg2];
+            memory_out <= memory[address];
         end
-       else begin
-           data_memory1 = memory[reg1];
-           data_memory2 = memory[reg2];
-           data_memory2 = memory[address;
-       end
     end
-    assign key_access = 16'h32;
-    assign read_reg1 = data_memory1;
-    assign read_reg2 = data_memory2;
-    assign memory_out = data_memory3;
+
+    assign key_access = 16'h0032;
+
 endmodule
