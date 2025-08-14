@@ -1,0 +1,13 @@
+module key_selctor(input key_select, output selected_key)
+wire sel;
+always @ (key_select) begin
+    case(key_select)
+      2'b00    : sel =16'h32;
+      2'b01    : sel =16'h87;
+      2'b10    : sel =16'h1024;
+      2'b11    : sel =16'h324;
+      default  : sel =16'h32;
+    endcase
+  end
+assign selected_key = sel;
+endmodule
