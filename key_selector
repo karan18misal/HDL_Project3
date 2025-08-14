@@ -1,4 +1,4 @@
-module key_selctor(input key_select, output selected_key)
+module key_selctor(input key_select, output selected_key);
 wire sel;
 always @ (key_select) begin
     case(key_select)
