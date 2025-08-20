@@ -1,11 +1,5 @@
 module tb_top_main;
-
-  // Clock generation
   logic clk;
-  initial clk = 0;
-  always #5 clk = ~clk; // 100MHz clock
-
-  // Inputs
   logic [9:0] address_mem;
   logic [9:0] address_reg;
   logic [9:0] address_reg1;
@@ -15,14 +9,10 @@ module tb_top_main;
   logic enable;
   logic memory_input_selection;
   logic reg_input_selection;
-
-  // Outputs
   logic [31:0] data_mem;
   logic [31:0] data_reg;
   logic [31:0] data_reg1;
   logic [31:0] data_reg2;
-
-  // DUT instantiation
   top_main dut (
     .clk(clk),
     .address_mem(address_mem),
@@ -39,57 +29,14 @@ module tb_top_main;
     .data_reg1(data_reg1),
     .data_reg2(data_reg2)
   );
-
-  // Test sequence
+  initial clk = 0;
+  always #5 clk = ~clk; 
   initial begin
-    $display("Starting simulation...");
-    
-    // Initial setup
-    enable = 0;
-    memory_input_selection = 0;
-    reg_input_selection = 0;
-    address_mem = 10'd0;
-    address_reg = 10'd0;
-    address_reg1 = 10'd1;
-    address_reg2 = 10'd2;
-    data_in = 32'hA1A1A1A1;
-    data_in_reg = 32'hB2B2B2B2;
-
-    #20;
-
-    // Write to memory and registers
-    enable = 1;
-    memory_input_selection = 0; // Use data_in
-    reg_input_selection = 1;    // Use security_out
-    for (int i = 0; i < 5; i++) begin
-      address_mem = i;
-      address_reg = i;
-      data_in = 32'h1000 + i;
-      data_in_reg = 32'h2000 + i;
-      #20;
-    end
-
-    // Disable write
-    enable = 0;
-    #20;
-
-    // Read and display first 5 memory and register values
-    $display("\n--- Memory Contents ---");
-    for (int i = 0; i < 5; i++) begin
-      address_mem = i;
-      #20;
-      $display("Memory[%0d] = %h", i, dut.data_mem);
-    end
-
-    $display("\n--- Register Contents ---");
-    for (int i = 0; i < 5; i++) begin
-      address_reg = i;
-      #20;
-      $display("Register[%0d] = %h", i, dut.data_reg);
-    end
-
-    $display("\nSimulation complete.");
-    $finish;
-  end
-
-endmodule
+	address_mem = 10'b00;
+	address_reg = 10'b00;
+	enable=1'b0;
+	data_in= 32'd29839;
+	memory_input_selection=1'b0;
+	reg_input_selection=1'b1;
+  
+	
