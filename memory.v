@@ -4,7 +4,7 @@ module memory (
     input [31:0] write_data,
     input mem_write,
     output reg [31:0] read_data,
-    output [15:0] key_access
+    output wire [15:0] key_access
 );
     reg [31:0] memory [0:1023];
 
