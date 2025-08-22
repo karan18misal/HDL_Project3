@@ -9,19 +9,14 @@ reg [31:0] dataa;
 always @(*) begin
     if (key_access_mem == 16'h0032) begin
         if (encryption_on) begin
-            dataa = data_in - 3;
-            dataa = dataa ^ 2;
-            dataa = dataa + 9;
-            dataa = dataa * 3;
+            dataa = (((data_in - 3) ^ 2 )+ 9) * 3;
+
         end else begin
             dataa = data_in;
         end
     end else if (key_access_reg == 16'h0032) begin
         if (!encryption_on) begin
-            dataa = data_in / 3;
-            dataa = dataa - 9;
-            dataa = ~(dataa ^ 2);
-            dataa = dataa + 3;
+            dataa = ~(((data_in / 3) - 9) ^ 2 ) + 3;
         end else begin
             dataa = data_in;
         end
