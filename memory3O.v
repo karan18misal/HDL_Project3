@@ -1,0 +1,1 @@
+module memory(input clk, input data_in, input read_address, input write_address, output data_out)
