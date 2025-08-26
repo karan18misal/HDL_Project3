@@ -3,37 +3,32 @@ module memory (
     input [9:0] address,
     input [31:0] write_data,
     input mem_write,
-    input key_access_in;
+    input [15:0] key_access_in,
     output reg [31:0] read_data,
-  output wire [15:0] key_access_out
-);	
-    integer i;
-  	initial begin
-      for (i = 0; i < 1024; i = i + 1)begin
-      	memory[i] = ((memory[i] ^ 0x3F) + 21) * 2;
-      end
-    end
-    reg [31:0] memory [0:1023];
-    always @(key_access_in)begin
-      for (i = 0; i < 1024; i = i + 1)begin
-        if(key_access_in = 16'h0032)begin
-          memory[i] = ~(((memory[i] / 2) - 21) ^ 0x3F);
-          memory[i] <=  (((memory[i]) ^ 2 )+ 9) * 3;
-        end
-        else if(key_access_in = 16'h87)begin
-          memory[i] <=  ~(((memory[i] / 3) - 9) ^ 2 ) + 3;
-          memory[i] = ~(((memory[i] << 1) + 7) ^ 0x5A);
-        end
-        else if(key_access_in = 16'h1024)begin
-          memory[i] = ((memory[i] ^ 0x5A) - 7) >> 1;
-          memory[i] = ((memory[i] ^ 0xA3) + 17) / 2;
-        end
-        else if(key_access_in = 16'h324)begin
-          memory[i] = ~(((memory[i] * 2) - 17) ^ 0xA3);
-          memory[i] = ((memory[i] ^ 0x3F) + 21) * 2;
+    output wire [15:0] key_access_out
+);
 
+    reg [31:0] memory [0:1023];
+    integer i;
+
+    initial begin
+        for (i = 0; i < 1024; i = i + 1) begin
+            memory[i] = ((0 ^ 32'h3F) + 21) * 2;
         end
-      end 
+    end
+
+    always @(key_access_in) begin
+        for (i = 0; i < 1024; i = i + 1) begin
+            if (key_access_in == 16'h0032) begin
+                memory[i] = (((memory[i] ^ 2) + 9) * 3);
+            end else if (key_access_in == 16'h0087) begin
+                memory[i] = ~(((memory[i] << 1) + 7) ^ 8'h5A);
+            end else if (key_access_in == 16'h1024) begin
+                memory[i] = ((memory[i] ^ 8'hA3) + 17) / 2;
+            end else if (key_access_in == 16'h0324) begin
+                memory[i] = ((memory[i] ^ 8'h3F) + 21) * 2;
+            end
+        end
     end
 
     always @(posedge clk) begin
@@ -43,5 +38,7 @@ module memory (
             read_data <= memory[address];
         end
     end
-    assign key_access = key_access_in; 
+
+    assign key_access_out = key_access_in;
+
 endmodule
