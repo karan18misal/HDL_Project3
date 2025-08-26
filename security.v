@@ -14,7 +14,8 @@ always @(*) begin
         end else begin
             dataa = data_in;
         end
-    end else if (key_access_reg == 16'h0032) begin
+    end 
+    if (key_access_reg == 16'h0032) begin
         if (!encryption_on) begin
             dataa = ~(((data_in / 3) - 9) ^ 2 ) + 3;
         end else begin
