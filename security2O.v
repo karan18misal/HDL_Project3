@@ -6,7 +6,6 @@ module security(
     output reg [31:0] data_out_mem,
     output reg [31:0] data_out_reg
 );
-reg [31:0] dataa;
 always @(*) begin
     if (key_access_mem == 16'h0032) begin       
             data_out_mem <= (((data_in_reg - 3) ^ 2 )+ 9) * 3; 
