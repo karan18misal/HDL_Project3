@@ -7,21 +7,13 @@ module security(
 );
 reg [31:0] dataa;
 always @(*) begin
-    if (key_access_mem == 16'h0032) begin
-        if (encryption_on) begin
+    if (key_access_mem == 16'h0032) begin       
             dataa = (((data_in - 3) ^ 2 )+ 9) * 3;
-
-        end else begin
-            dataa = data_in;
-        end
+       
     end 
     if (key_access_reg == 16'h0032) begin
-        if (!encryption_on) begin
+        
             dataa = ~(((data_in / 3) - 9) ^ 2 ) + 3;
-        end else begin
-            dataa = data_in;
-        end
-    end
-    data_out = dataa;
+        
 end
 endmodule
