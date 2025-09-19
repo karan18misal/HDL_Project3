@@ -15,7 +15,7 @@ module memory(
     output [15:0] key_access
 );
 
-    reg [31:0] memory [0:1023];
+	reg [31:0] memory [1023:0];
 
     assign key_access = 16'h0032;
 
