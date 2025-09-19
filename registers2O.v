@@ -13,7 +13,7 @@ module registers(
     output [15:0] key_access
 );
 
-    reg [31:0] memory [0:1023];
+    reg [31:0] memory [1023:0];
 
     always @(posedge clk) begin
             memory[address_mem] <= write_data_mem;
