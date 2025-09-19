@@ -1,19 +1,26 @@
 module top_main(
   input clk,
   input [31:0] data_in,
-  input [31:0] write_data_alu,
-  input [9:0] read_address,
-  input [9:0] write_address,
-  input [9:0] read_address_reg,
-  input [9:0] write_address_reg,
-  input [9:0] reg1,
-  input [9:0] reg2,
-  input [9:0] address_mem,
-  input [9:0] address_alu,
-  input [9:0] address_to_mem,
-  output reg [31:0] read_reg1,
-  output reg [31:0] read_reg2,
-  output reg [31:0] data_out_mem
+  input [7:0] read_address,
+  input [7:0] write_address,
+  input [7:0] read_address_reg,
+  input [7:0] write_address_reg,
+  input [7:0] reg1,
+  input [7:0] reg2,
+  input [7:0] address_mem,
+  input [7:0] address_alu,
+  input [7:0] address_to_mem,
+  input [3:0] alu_ctrl,
+  input wenable,
+  input renable,
+  input wenable_reg,
+  input renable_reg,
+  input wenable_mem,
+  input renable_mem,
+  input wenable_alu,
+  input renable_alu,
+  output reg [31:0] data_out_mem,
+  output zero
 );
 
   wire [31:0] data_regtosec;
@@ -22,6 +29,9 @@ module top_main(
   wire [31:0] data_sectoreg;
   wire [15:0] key_access_mem;
   wire [15:0] key_access_reg;
+  wire [31:0] read_reg1;
+  wire [31:0] read_reg2;
+  wire [31:0] write_data_alu;
 
   memory m0(
     .clk(clk),
@@ -31,6 +41,10 @@ module top_main(
     .data_in_reg(data_sectomem),
     .read_address_reg(read_address_reg),
     .write_address_reg(write_address_reg),
+    .wenable(wenable),
+    .renable(renable),
+    .wenable_reg(wenable_reg),
+    .renable_reg(renable_reg),
     .data_out(data_out_mem),
     .data_out_reg(data_memtosec),
     .key_access(key_access_mem)
@@ -45,6 +59,10 @@ module top_main(
     .address_to_mem(address_to_mem),
     .write_data_mem(data_sectoreg),
     .write_data_alu(write_data_alu),
+    .wenable_mem(wenable_mem),
+    .renable_mem(renable_mem),
+    .wenable_alu(wenable_alu),
+    .renable_alu(renable_alu),
     .read_reg1(read_reg1),
     .read_reg2(read_reg2),
     .memory_out(data_regtosec),
@@ -62,5 +80,11 @@ module top_main(
     .data_out_reg(data_sectoreg)
   );
 
-endmodule
+  alu a0(
+    .a(read_reg1),
+    .b(read_reg2),
+    .alu_ctrl(alu_ctrl),
+    .result(write_data_alu),
+    .zero(zero));
 
+endmodule
