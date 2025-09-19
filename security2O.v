@@ -1,5 +1,4 @@
 module security(
-   module security(
     input [31:0] data_in_memory,
     input [31:0] data_in_reg,
     input [15:0] key_access_mem,
