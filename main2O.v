@@ -1,6 +1,7 @@
 module top_main(
   input clk,
   input [31:0] data_in,
+  input [4:0] opcode,
   input [7:0] read_address,
   input [7:0] write_address,
   input [7:0] read_address_reg,
@@ -10,18 +11,15 @@ module top_main(
   input [7:0] address_mem,
   input [7:0] address_alu,
   input [7:0] address_to_mem,
-  input [3:0] alu_ctrl,
-  input wenable,
-  input renable,
-  input wenable_reg,
-  input renable_reg,
-  input wenable_mem,
-  input renable_mem,
-  input wenable_alu,
-  input renable_alu,
   output reg [31:0] data_out_mem,
   output zero
 );
+
+  wire [3:0] alu_ctrl;
+  wire wenable, renable;
+  wire wenable_reg, renable_reg;
+  wire wenable_mem, renable_mem;
+  wire wenable_alu, renable_alu;
 
   wire [31:0] data_regtosec;
   wire [31:0] data_sectomem;
@@ -32,7 +30,18 @@ module top_main(
   wire [31:0] read_reg1;
   wire [31:0] read_reg2;
   wire [31:0] write_data_alu;
-
+  control_unit cu0(
+    .opcode(opcode),
+    .alu_ctrl(alu_ctrl),
+    .wenable(wenable),
+    .renable(renable),
+    .wenable_reg(wenable_reg),
+    .renable_reg(renable_reg),
+    .wenable_mem(wenable_mem),
+    .renable_mem(renable_mem),
+    .wenable_alu(wenable_alu),
+    .renable_alu(renable_alu)
+  );
   memory m0(
     .clk(clk),
     .data_in(data_in),
@@ -49,7 +58,6 @@ module top_main(
     .data_out_reg(data_memtosec),
     .key_access(key_access_mem)
   );
-
   registers r0(
     .clk(clk),
     .reg1(reg1),
@@ -68,7 +76,6 @@ module top_main(
     .memory_out(data_regtosec),
     .key_access(key_access_reg)
   );
-
   security s0(
     .data_in_memory(data_memtosec),
     .data_in_reg(data_regtosec),
@@ -79,12 +86,12 @@ module top_main(
     .data_out_mem(data_sectomem),
     .data_out_reg(data_sectoreg)
   );
-
   alu a0(
     .a(read_reg1),
     .b(read_reg2),
     .alu_ctrl(alu_ctrl),
     .result(write_data_alu),
-    .zero(zero));
+    .zero(zero)
+  );
 
 endmodule
