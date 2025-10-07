@@ -3,7 +3,6 @@ module top_main_tb;
   bit clk;
   top_main_if tb_if(clk);
 
-  // DUT instantiation
   top_main uut (
     .clk(tb_if.clk),
     .data_in(tb_if.data_in),
@@ -21,11 +20,9 @@ module top_main_tb;
     .zero(tb_if.zero)
   );
 
-  // Clock generation
   initial clk = 0;
   always #5 clk = ~clk;
 
-  // Layered components
   Generator gen;
   Driver drv;
   Monitor mon;
