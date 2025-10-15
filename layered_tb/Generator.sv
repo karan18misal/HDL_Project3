@@ -18,7 +18,7 @@ class Generator;
     read_address_reg != write_address_reg;
     reg1 != reg2;
   }
-  function void generate();
+  function void generate1();
     assert(this.randomize()) else $fatal("Randomization failed");
   endfunction
 
