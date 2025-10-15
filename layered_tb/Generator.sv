@@ -1,25 +1,24 @@
-class Generator;
+`include "Generator.sv"
+class Driver;
+  virtual top_main_if vif;
 
-  rand bit [31:0] data_in;
-  rand bit [4:0] opcode;
-  rand bit [7:0] read_address, write_address;
-  rand bit [7:0] read_address_reg, write_address_reg;
-  rand bit [7:0] reg1, reg2;
-  rand bit [7:0] address_mem, address_alu, address_to_mem;
-
-
-  constraint opcode_range {
-    opcode >= 5'd0;
-    opcode <= 5'd9;
-  }
-
-  constraint address_valid {
-    read_address != write_address;
-    read_address_reg != write_address_reg;
-    reg1 != reg2;
-  }
-  function void generate1();
-    assert(this.randomize()) else $fatal("Randomization failed");
+  function new(virtual top_main_if vif);
+    this.vif = vif;
   endfunction
 
+  task drive();
+    Generator gen;
+    gen.generate1();
+    vif.data_in         <= gen.data_in;
+    vif.opcode          <= gen.opcode;
+    vif.read_address    <= gen.read_address;
+    vif.write_address   <= gen.write_address;
+    vif.read_address_reg <= gen.read_address_reg;
+    vif.write_address_reg <= gen.write_address_reg;
+    vif.reg1            <= gen.reg1;
+    vif.reg2            <= gen.reg2;
+    vif.address_mem     <= gen.address_mem;
+    vif.address_alu     <= gen.address_alu;
+    vif.address_to_mem  <= gen.address_to_mem;
+  endtask
 endclass
