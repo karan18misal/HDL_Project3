@@ -16,7 +16,6 @@ class Generator;
   constraint address_valid {
     read_address != write_address;
     read_address_reg != write_address_reg;
-    reg1 != reg2;
   }
   function new();
     assert(this.randomize()) else $fatal("Randomization failed");
