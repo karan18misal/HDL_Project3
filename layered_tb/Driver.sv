@@ -5,10 +5,10 @@ class Driver;
   function new(virtual top_main_if vif);
     this.vif = vif;
   endfunction
+Generator gen1;
 
   task drive();
-    Generator gen;
-    gen.generate1();
+    Generator gen = new();
     vif.data_in         <= gen.data_in;
     vif.opcode          <= gen.opcode;
     vif.read_address    <= gen.read_address;
