@@ -1,3 +1,6 @@
+`include "Interface.sv"
+`include "Driver.sv"
+`include "Monitor.sv"
 module top_main_tb;
 
   bit clk;
@@ -23,18 +26,15 @@ module top_main_tb;
   initial clk = 0;
   always #5 clk = ~clk;
 
-  Generator gen;
   Driver drv;
   Monitor mon;
 
   initial begin
-    gen = new();
     drv = new(tb_if);
     mon = new(tb_if);
 
     repeat (10) begin
-      gen.generate();
-      drv.drive(gen);
+      drv.drive();
       #10;
       mon.observe();
     end
