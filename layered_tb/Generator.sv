@@ -25,6 +25,18 @@ class Generator;
     reg1 != address_alu;
     reg2 != address_alu;
     address_to_mem != address_alu;
+
+    read_address       inside {[8'd00:8'd10]};
+    write_address      inside {[8'd00:8'd10]};
+    read_address_reg   inside {[8'd00:8'd10]};
+    write_address_reg  inside {[8'd00:8'd10]};
+    reg1               inside {[8'd00:8'd10]};
+    reg2               inside {[8'd00:8'd10]};
+    address_mem        inside {[8'd00:8'd10]};
+    address_alu        inside {[8'd00:8'd10]};
+    address_to_mem     inside {[8'd00:8'd10]};
+
+
   }
   function new();
     assert(this.randomize()) else $fatal("Randomization failed");
