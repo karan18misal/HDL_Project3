@@ -1,6 +1,8 @@
 `include "Interface.sv"
 `include "Driver.sv"
 `include "Monitor.sv"
+`include "Scoreboard.sv"
+
 module top_main_tb;
 
   bit clk;
@@ -28,15 +30,18 @@ module top_main_tb;
 
   Driver drv;
   Monitor mon;
+  scoreboard sb;
 
   initial begin
     drv = new(tb_if);
     mon = new(tb_if);
+    sb  = new(tb_if, uut.m0, uut.r0, uut.a0);
 
     repeat (10) begin
       drv.drive();
       #10;
       mon.observe();
+      sb.check_all_opcodes();
     end
 
     $finish;
